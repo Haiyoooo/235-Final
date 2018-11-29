@@ -59,7 +59,7 @@ void puddleUpdater()
     pu.render();
     pu.checkPlayer();
 
-    if(pu.approval <= 10)
+    if(pu.approval <= 10 || gamestate == GAMEEND)
     {
       puddle.remove(i);
     }

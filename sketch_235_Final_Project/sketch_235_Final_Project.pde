@@ -2,13 +2,13 @@ Player player;
 ArrayList <Puddle> puddle = new ArrayList<Puddle>();
 ArrayList <Enemy> enemy = new ArrayList<Enemy>();
 boolean DEBUG = true;
-boolean night = false;
-int timer = 0; // for spawning puddles
-float gameTimer = 0; // for total game time
-
+boolean night;
+int timer; // for spawning puddles
+float gameTimer; // for total game time
+float step;
 final int RUNNING = 1;
 final int GAMEEND = 2;
-int gamestate = 1;
+int gamestate;
 
 
 void setup()
@@ -16,6 +16,13 @@ void setup()
   size(800, 800);
   colorMode(HSB, 100);
   player = new Player();
+  
+  gamestate = 1;
+  night = false;
+  timer = 0;
+  gameTimer = 0;
+  step = PI;
+  
   enemySpawner();
 }
 
@@ -54,6 +61,10 @@ void draw()
 
 void mousePressed()
 {
+  if(gamestate == GAMEEND)
+  {
+    setup();
+  }
 }
 
 /*--------------------------------------------------

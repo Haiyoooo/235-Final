@@ -13,7 +13,7 @@ void debugger()
 }
 /*--------------------------------------------------*/
 
-float step = PI;
+
 
 // day and night cycles
 void dayTime()
