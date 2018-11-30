@@ -42,21 +42,19 @@ void dayTime()
   color blue = color(55, 30, 100); //blue
   color orange = color(90, 10, 100); //orange
   if(step % (2 * PI) > PI)
-  {
-    background(easeIn(55, 90, y/250), 50, 100);
-
-    night = false;
-  }
-  else 
-  {
-    background(90 * y/250, 50, easeIn(0, 100, y1/250));
-
-    night = true;
-  }
+    {
+      background(easeIn(55, 90, y/250), 50, 100);
   
+      night = false;
+    }
+  else 
+    {
+      background(90 * y/250, 50, easeIn(0, 100, y1/250));
+  
+      night = true;
+    }
 
-    
-
+    //SUN
     fill(10, 80, 100, 5);     
     for(int i = 10; i > 0; i--)
     {   
@@ -66,7 +64,7 @@ void dayTime()
     fill(10, 80, 80);
     ellipse(x, y, 70, 70); //sun
 
-    
+    //MOON
     fill(50, 20, 90);
     ellipse(x1, y1, 30, 30); //moon
     
@@ -76,6 +74,9 @@ void dayTime()
       ellipse(x1, y1, i * 5, i * 5); //moon's static red glow
     }
 
+    //GROUND
+    fill(15, easeOut(40, 10, y/300), 80);
+    rect(0, 200, width, height);
 }
 
 // check collision

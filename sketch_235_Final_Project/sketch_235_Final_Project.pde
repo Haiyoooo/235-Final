@@ -47,30 +47,21 @@ void draw()
       gameTimer += 1;
       dayTime();
       
-      //floor
-      fill(15, 30, 80);
-      rect(0, 200, width, height);
-      
       //spawner
       puddleSpawner();
       
+      //updater
       for(int i = gameObject.size() - 1; i >= 0; i--)
       {
         GameObject obj = gameObject.get(i);
         obj.update();
         obj.render();
         
+      //despawner
         if(obj.tab == "puddle" && (obj.wetness < 0 || gamestate == GAMEEND) )
         {
           gameObject.remove(i);
         }
-        
-      }
-
-      
-      if(night)
-      {
-        //enemyUpdater();
       }
       break;
       
