@@ -1,14 +1,17 @@
 ArrayList <GameObject> gameObject = new ArrayList<GameObject>();
+Player player;
+
 boolean DEBUG = true;
+float ease;
+
 boolean night;
 int timer; // for spawning puddles
 float gameTimer; // for total game time
 float step;
+
+int gamestate;
 final int RUNNING = 1;
 final int GAMEEND = 2;
-int gamestate;
-float ease;
-Player player;
 
 
 void setup()
@@ -56,6 +59,12 @@ void draw()
         GameObject obj = gameObject.get(i);
         obj.update();
         obj.render();
+        
+        if(obj.tab == "puddle" && (obj.wetness < 0 || gamestate == GAMEEND) )
+        {
+          gameObject.remove(i);
+        }
+        
       }
 
       
@@ -98,8 +107,8 @@ void keyPressed()
   if(gamestate == RUNNING)
   {
     setMove(keyCode, true);
-    if(player.selfEsteem > 0)player.selfEsteem--;
-    if(key == ' ')player.getSelfEsteem();
+    if(player.sugar > 0)player.sugar--;
+    if(key == ' ')player.getsugar();
   }
 }
  

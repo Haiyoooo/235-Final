@@ -6,8 +6,8 @@ void debugger()
 {
   fill(100);
   textSize(20);
-  text("selfEsteem "  + nf(player.selfEsteem, 0, 0)
-       + "\napproval " + nf(player.approval, 0, 0)
+  text("sugar "  + nf(player.sugar, 0, 0)
+       + "\nwetness " + nf(player.wetness, 0, 0)
        + "\ngame timer " + nf(gameTimer/60, 0, 0)
        + "\nEASING" + nf(ease, 0, 0)
        //+ "\nEnemies " + enemy.size()
@@ -17,10 +17,10 @@ void debugger()
        
  fill(15, 50, 80);
  rectMode(CORNER);
- rect(10, 10, player.selfEsteem * 10, 10);
+ rect(10, 10, player.sugar * 10, 10);
  
  fill(60, 80, 70);
-  rect(10, 20, player.approval, 10);
+  rect(10, 20, player.wetness, 10);
  
  
 }

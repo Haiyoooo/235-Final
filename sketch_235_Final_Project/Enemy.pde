@@ -1,16 +1,14 @@
- //<>//
-/*--------------------------------------------------
-                    ENEMY CLASS
---------------------------------------------------*/
 class Enemy extends GameObject
 {
-  PVector position;
   PVector zonePos;
   float zone;
   
   Enemy(float posX, float posY)
   {
+    tab = "enemy";
+    wetness = 50;
     position = new PVector(posX, posY);
+    
     zonePos = new PVector(posX, posY);
     zone = 400;
   }

@@ -1,25 +1,25 @@
 class Player extends GameObject
 {
-  float approval;
-  float selfEsteem;
+  float sugar;
   float size;
   float speed;
-  PVector position;
   
   Player()
   {
-    approval = 10000;
-    selfEsteem = 30;
-    size = 50;
+    tab = "player";
+    wetness = 10000;
     position = new PVector(width/2, height/2);
+    sugar = 30;
+    size = 50;
+
   }
   
   void update()
   {
-    selfEsteem = constrain(selfEsteem, 0, 100);
-    approval -=0.01;
+    sugar = constrain(sugar, 0, 100);
+    wetness -=0.01;
     
-    if(selfEsteem > 0)
+    if(sugar > 0)
     {
       speed = 5;
     } else
@@ -32,20 +32,20 @@ class Player extends GameObject
     if (isDown  && position.y < height)position.add(0,speed);
     if (isUp    && position.y > 230   )position.add(0,-speed);
     
-    if(approval < 0)gamestate = GAMEEND;
+    if(wetness < 0)gamestate = GAMEEND;
 
   }
   
   void render()
   {
-    fill(30, approval, selfEsteem);
+    fill(30, wetness, sugar);
     ellipse(position.x, position.y, size, size);
   }
   
-  void getSelfEsteem()
+  void getsugar()
   {
-    approval -= 10;
-    selfEsteem += 10;
+    wetness -= 10;
+    sugar += 10;
   }
  
 
