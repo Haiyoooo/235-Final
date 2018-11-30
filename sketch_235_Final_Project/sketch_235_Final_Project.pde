@@ -1,6 +1,7 @@
 Player player;
 ArrayList <Puddle> puddle = new ArrayList<Puddle>();
 ArrayList <Enemy> enemy = new ArrayList<Enemy>();
+ArrayList <GameObject> gameObject = new ArrayList<GameObject>();
 boolean DEBUG = true;
 boolean night;
 int timer; // for spawning puddles
@@ -23,13 +24,15 @@ void setup()
   timer = 0;
   gameTimer = 0;
   step = PI;
-  ease = 0.01;
-  
+  ease = 0.5;
+
   enemySpawner();
 }
 
 void draw()
 { 
+
+  
   switch(gamestate)
   {
     case RUNNING:

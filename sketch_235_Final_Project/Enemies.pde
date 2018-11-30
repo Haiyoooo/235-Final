@@ -10,7 +10,7 @@ void enemySpawner()
 /*--------------------------------------------------
                     ENEMY CLASS
 --------------------------------------------------*/
-class Enemy
+class Enemy extends GameObject
 {
   PVector position;
   PVector zonePos;
@@ -26,6 +26,7 @@ class Enemy
   void update()
   {
     isAggro();
+    zonePos.add( random(-10, 10), random( -3, 3) ); //TODO: Restrict enemies from roaming off screen
   }
   
   void render()
@@ -47,8 +48,8 @@ class Enemy
     if(playerDistanceTo(zonePos) < zone/2)
     {
       //chase
-      position.x = easeOutBack(position.x, player.position.x, ease);  //0.006
-      position.y = easeOutBack(position.y, player.position.y, ease);  //0.006
+      position.x = easeIn(position.x, player.position.x, ease);  //0.006
+      position.y = easeIn(position.y, player.position.y, ease);  //0.006
       return true;
     }
     //return home
@@ -67,7 +68,8 @@ void enemyUpdater()
     for(int i = enemy.size() - 1; i >= 0; i--)
     {
       Enemy e = enemy.get(i);
-      e.update();
-      e.render();
+      gameObject.add(e);
+      //e.update();
+      //e.render();
     }
 }

@@ -108,7 +108,7 @@ float easeOut(float start, float end, float t)
 //fast then slow
 float easeIn(float start, float end, float t)
 {
-  return start + (end - start) * t * t * t;
+  return start + (end - start) * t * t * t * t * t;
 }
 
 //slow then fast with overshoot
