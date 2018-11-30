@@ -18,6 +18,7 @@ void setup()
 {
   size(800, 800);
   colorMode(HSB, 100);
+  imageMode(CENTER);
   noStroke();
   gamestate = 1;
   night = false;
@@ -25,8 +26,10 @@ void setup()
   gameTimer = 0;
   step = PI;
   ease = 0.5;
-  
   frameRate(60);
+  
+  loadImages();
+  loadSounds();
   
   //enemySpawner();
   gameObject.add( new Enemy(width * .5, height * .5) );
@@ -39,13 +42,11 @@ void setup()
 
 void draw()
 { 
-
-  
   switch(gamestate)
   {
     case RUNNING:
       gameTimer += 1;
-      dayTime();
+      skyBox();
       
       //spawner
       puddleSpawner();
@@ -63,6 +64,14 @@ void draw()
           gameObject.remove(i);
         }
       }
+      
+      //night time
+      if(night)
+      {
+        translate(random(-1,1), random(-5,5) ); //screenshake
+        fogOfWar();
+      }
+      
       break;
       
     case GAMEEND:

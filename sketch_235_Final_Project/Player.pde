@@ -38,14 +38,29 @@ class Player extends GameObject
   
   void render()
   {
-    fill(30, wetness, sugar);
-    ellipse(position.x, position.y, size, size);
+    tint(easeOut(10, 60, sugar/100), 80, 80);
+    //ellipse(position.x, position.y, size, size);
+    image(player_leaves, position.x, position.y, size, size);
+    image(player_body, position.x, position.y, size, size);
+    
+    if(wetness > 20 && wetness < 90)
+    {
+      image(player_faceHappy, position.x, position.y, size, size);
+    } else
+    {
+      image(player_faceSick, position.x, position.y, size, size);
+    }
+    
+
   }
   
   void getsugar()
   {
+    speed = 0;
     wetness -= 10;
     sugar += 10;
+    fill(0);
+    ellipse(position.x, position.y, 10, 10);
   }
  
 

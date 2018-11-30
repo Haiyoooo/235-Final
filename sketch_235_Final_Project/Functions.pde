@@ -1,6 +1,4 @@
-/*--------------------------------------------------
-                       DEBUGGING
---------------------------------------------------*/
+/*----------------------DEBUG-----------------*/
 
 void debugger()
 {
@@ -13,7 +11,7 @@ void debugger()
        //+ "\nEnemies " + enemy.size()
        //+ "\nPuddles " + puddle.size()
        + "\nGame objects" + gameObject.size()
-       , 20, 100);
+       , 10, 500);
        
  fill(15, 50, 80);
  rectMode(CORNER);
@@ -24,11 +22,8 @@ void debugger()
  
  
 }
-/*--------------------------------------------------*/
-
-
-// day and night cycles
-void dayTime()
+/*--------------------DAY AND NIGHT----------------------*/
+void skyBox()
 {
   float x, y, x1, y1;
   
@@ -43,22 +38,22 @@ void dayTime()
   color orange = color(90, 10, 100); //orange
   if(step % (2 * PI) > PI)
     {
-      background(easeIn(55, 90, y/250), 50, 100);
-  
+      fill(easeIn(55, 90, y/250), 50, 100, 1);
       night = false;
     }
   else 
     {
-      background(90 * y/250, 50, easeIn(0, 100, y1/250));
-  
+      fill(90 * y/250, 50, easeIn(0, 100, y1/250), 1);
       night = true;
     }
+    
+    rect(0, 0, width, 200);
 
-    //SUN
+    //SUN //<>//
     fill(10, 80, 100, 5);     
-    for(int i = 10; i > 0; i--)
+    for(int i = 5; i > 0; i--)
     {   
-      float rng = random(20, 50);
+      float rng = random(1, 100);
       ellipse(x, y, i * 20 + rng, i * 20 + rng); //sun's animated burning halo
     }
     fill(10, 80, 80);
@@ -73,20 +68,23 @@ void dayTime()
     {   
       ellipse(x1, y1, i * 5, i * 5); //moon's static red glow
     }
-
+    
+    
+    
     //GROUND
     fill(15, easeOut(40, 10, y/300), 80);
     rect(0, 200, width, height);
+    
 }
 
-// check collision
+/*------------------------DISTANCE COLLISION---------------------------*/
 float playerDistanceTo(PVector position)
 {
   float distance = sqrt( pow(player.position.y - position.y, 2) + pow(player.position.x - position.x, 2) ) - (player.size * .5);
   return distance;
 }
 
-// game over screen
+/*------------------------GAME OVER---------------------------*/
 void displayHighscore()
 {
   background(0);
@@ -94,7 +92,7 @@ void displayHighscore()
   + "\n you survived for " + nf(gameTimer/60, 0, 2) + " seconds", width/2, height/2);
 }
 
-/*-----------------------------------------------------------------*/
+/*------------------------TWEENING---------------------------*/
 /*
 Enemy chase
 easeOut --> 0.06
@@ -123,9 +121,7 @@ float easeOutBack(float start, float end, float t)
   return start + (end - start) * (t * t * ((s + 1) * t + s) + 1);
 }
 
-/*--------------------------------------------------
-                    MAKE PUDDLE
---------------------------------------------------*/
+/*---------------MAKE PUDDLES--------------------------*/
 void puddleSpawner()
 {
   if(millis() - 1000 > timer)
@@ -133,4 +129,63 @@ void puddleSpawner()
     gameObject.add( new Puddle() );
     timer = millis();
   }
+}
+
+/*--------------------IMAGES-------------------------*/
+PImage player_body;
+PImage player_leaves;
+PImage player_faceHappy;
+PImage player_faceSick;
+PImage player_faceScared;
+
+void loadImages()
+{
+  player_body = loadImage("Player_bodyW.png");
+  player_leaves = loadImage("Player_leaves.png");
+  player_faceHappy = loadImage("Player_facehappy.png");
+  player_faceSick = loadImage("Player_facesick.png");
+  player_faceScared = loadImage("Player_facescared.png");
+}
+
+/*--------------------SOUNDS-------------------------*/
+
+import ddf.minim.*;
+Minim minim;
+AudioPlayer slurpSound;
+AudioPlayer bgSound;
+AudioPlayer teleportSound;
+AudioPlayer dramaticSound;
+
+void loadSounds()
+{
+  minim = new Minim(this);
+  slurpSound = minim.loadFile("166158__adam-n__slurp.wav");
+}
+
+/*--------------------FOG-------------------------*/
+void fogOfWar()
+{
+  // Begin shape
+  beginShape();
+  
+  // darkness
+  fill(0);
+  vertex(0, 0);
+  vertex(width, 0);
+  vertex(width, height);
+  vertex(0, height);
+  
+  // circular area of vision
+  beginContour();
+  for(int i = 0; i < 360; i ++)
+  {
+   float a = radians(i);
+   float x = 200 * sin(a) + player.position.x;
+   float y = 200 * cos(a) + player.position.y;
+   vertex(x, y);
+  }
+  endContour();
+  
+  // finish off the shape
+  endShape(CLOSE);
 }

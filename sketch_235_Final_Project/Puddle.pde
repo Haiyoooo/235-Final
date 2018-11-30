@@ -24,10 +24,17 @@ class Puddle extends GameObject
   void checkPlayer()
   {
     //if the player is touching the puddle, the player absorbs the puddle
-    if(playerDistanceTo(position) < 25)
+    if(playerDistanceTo(position) < wetness/2)
     {
       wetness-= 1;
       player.wetness += 1;
+        if(!slurpSound.isPlaying())
+        { 
+          slurpSound.play(1);
+        }
+    //} else if (slurpSound.isPlaying())
+    //{
+    //  slurpSound.pause();
     }
   }
 }

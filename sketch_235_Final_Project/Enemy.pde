@@ -15,22 +15,28 @@ class Enemy extends GameObject
   
   void update()
   {
-    isAggro();
     zonePos.add( random(-10, 10), random( -3, 3) ); //TODO: Restrict enemies from roaming off screen
+    if(night)
+    {
+      isAggro();
+    }
   }
   
   void render()
   {
-    if(isAggro())
+    if(night)
     {
-      fill(100, 80, 80, 20); //red
-    }else{
-      fill(50, 50, 50, 10); //white
+      if(isAggro())
+      {
+        fill(100, 80, 80, 20); //red
+      }else{
+        fill(50, 50, 50, 10); //white
+      }
+      ellipse(zonePos.x, zonePos.y, zone, zone);
+      
+      fill(100, 80, 80);
+      ellipse(position.x, position.y, 50, 50);
     }
-    ellipse(zonePos.x, zonePos.y, zone, zone);
-    
-    fill(100, 80, 80);
-    ellipse(position.x, position.y, 50, 50);
   }
   
   boolean isAggro()
