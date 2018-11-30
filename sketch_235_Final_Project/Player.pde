@@ -8,7 +8,7 @@ class Player
   
   Player()
   {
-    approval = 20;
+    approval = 10000;
     selfEsteem = 30;
     size = 50;
     position = new PVector(width/2, height/2);

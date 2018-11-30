@@ -9,6 +9,7 @@ float step;
 final int RUNNING = 1;
 final int GAMEEND = 2;
 int gamestate;
+float ease;
 
 
 void setup()
@@ -16,12 +17,13 @@ void setup()
   size(800, 800);
   colorMode(HSB, 100);
   player = new Player();
-  
+  noStroke();
   gamestate = 1;
   night = false;
   timer = 0;
   gameTimer = 0;
   step = PI;
+  ease = 0.01;
   
   enemySpawner();
 }
@@ -44,7 +46,6 @@ void draw()
       if(night)
       {
         enemyUpdater();
-        player.approval--;
       }
       break;
       
@@ -65,6 +66,9 @@ void mousePressed()
   {
     setup();
   }
+  
+  if(mouseButton == LEFT) ease -= 0.001 ;
+  if(mouseButton == RIGHT) ease += 0.001 ;
 }
 
 /*--------------------------------------------------

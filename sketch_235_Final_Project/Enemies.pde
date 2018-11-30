@@ -46,12 +46,14 @@ class Enemy
   {
     if(playerDistanceTo(zonePos) < zone/2)
     {
-      position.x = lerp(position.x, player.position.x, 0.02);
-      position.y = lerp(position.y, player.position.y, 0.02);
+      //chase
+      position.x = easeOutBack(position.x, player.position.x, ease);  //0.006
+      position.y = easeOutBack(position.y, player.position.y, ease);  //0.006
       return true;
     }
-    position.x = lerp(position.x, zonePos.x, 0.02);
-    position.y = lerp(position.y, zonePos.y, 0.02);
+    //return home
+    position.x = easeOut(position.x, zonePos.x, 0.002);
+    position.y = easeOut(position.y, zonePos.y, 0.002);
     return false;
   }
   
