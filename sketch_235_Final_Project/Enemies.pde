@@ -1,12 +1,4 @@
-/*--------------------------------------------------
-                    MAKE ENEMY
---------------------------------------------------*/
-void enemySpawner()
-{
-  enemy.add( new Enemy(width * .5, height * .5) );
-  enemy.add( new Enemy(width * .1, height * .4) );
-  enemy.add( new Enemy(width * .7, height * .9) );
-}
+ //<>//
 /*--------------------------------------------------
                     ENEMY CLASS
 --------------------------------------------------*/
@@ -58,18 +50,4 @@ class Enemy extends GameObject
     return false;
   }
   
-}
-
-/*--------------------------------------------------
-                    UPDATE ENEMY
---------------------------------------------------*/
-void enemyUpdater() 
-{
-    for(int i = enemy.size() - 1; i >= 0; i--)
-    {
-      Enemy e = enemy.get(i);
-      gameObject.add(e);
-      //e.update();
-      //e.render();
-    }
 }

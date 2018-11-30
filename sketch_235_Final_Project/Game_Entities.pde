@@ -1,10 +1,5 @@
-void gameObjectSpawner()
+class GameObject
 {
-
-}
-
-abstract class GameObject
-{
-  abstract void render();
-  abstract void update();
+  void render(){};
+  void update(){};
 }

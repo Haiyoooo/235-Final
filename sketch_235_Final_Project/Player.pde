@@ -1,4 +1,4 @@
-class Player
+class Player extends GameObject
 {
   float approval;
   float selfEsteem;
@@ -32,10 +32,8 @@ class Player
     if (isDown  && position.y < height)position.add(0,speed);
     if (isUp    && position.y > 230   )position.add(0,-speed);
     
-    if(approval < 0)
-    {
-      gamestate = GAMEEND;
-    }
+    if(approval < 0)gamestate = GAMEEND;
+
   }
   
   void render()

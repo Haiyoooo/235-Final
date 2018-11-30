@@ -10,6 +10,9 @@ void debugger()
        + "\napproval " + nf(player.approval, 0, 0)
        + "\ngame timer " + nf(gameTimer/60, 0, 0)
        + "\nEASING" + nf(ease, 0, 0)
+       //+ "\nEnemies " + enemy.size()
+       //+ "\nPuddles " + puddle.size()
+       + "\nGame objects" + gameObject.size()
        , 20, 100);
        
  fill(15, 50, 80);
@@ -117,4 +120,16 @@ float easeOutBack(float start, float end, float t)
   final float s = 1.70158f;
   --t;
   return start + (end - start) * (t * t * ((s + 1) * t + s) + 1);
+}
+
+/*--------------------------------------------------
+                    MAKE PUDDLE
+--------------------------------------------------*/
+void puddleSpawner()
+{
+  if(millis() - 1000 > timer)
+  {
+    gameObject.add( new Puddle() );
+    timer = millis();
+  }
 }

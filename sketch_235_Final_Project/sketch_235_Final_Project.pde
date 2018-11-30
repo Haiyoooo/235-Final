@@ -1,6 +1,3 @@
-Player player;
-ArrayList <Puddle> puddle = new ArrayList<Puddle>();
-ArrayList <Enemy> enemy = new ArrayList<Enemy>();
 ArrayList <GameObject> gameObject = new ArrayList<GameObject>();
 boolean DEBUG = true;
 boolean night;
@@ -11,13 +8,13 @@ final int RUNNING = 1;
 final int GAMEEND = 2;
 int gamestate;
 float ease;
+Player player;
 
 
 void setup()
 {
   size(800, 800);
   colorMode(HSB, 100);
-  player = new Player();
   noStroke();
   gamestate = 1;
   night = false;
@@ -25,8 +22,16 @@ void setup()
   gameTimer = 0;
   step = PI;
   ease = 0.5;
-
-  enemySpawner();
+  
+  frameRate(60);
+  
+  //enemySpawner();
+  gameObject.add( new Enemy(width * .5, height * .5) );
+  gameObject.add( new Enemy(width * .1, height * .4) );
+  gameObject.add( new Enemy(width * .7, height * .9) );
+  
+  player = new Player();
+  gameObject.add( player );
 }
 
 void draw()
@@ -38,17 +43,25 @@ void draw()
     case RUNNING:
       gameTimer += 1;
       dayTime();
+      
+      //floor
       fill(15, 30, 80);
       rect(0, 200, width, height);
-      player.update();
-      player.render();
       
+      //spawner
       puddleSpawner();
-      puddleUpdater();
+      
+      for(int i = gameObject.size() - 1; i >= 0; i--)
+      {
+        GameObject obj = gameObject.get(i);
+        obj.update();
+        obj.render();
+      }
+
       
       if(night)
       {
-        enemyUpdater();
+        //enemyUpdater();
       }
       break;
       

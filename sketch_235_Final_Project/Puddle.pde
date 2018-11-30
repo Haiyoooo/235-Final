@@ -1,18 +1,8 @@
-/*--------------------------------------------------
-                    MAKE PUDDLE
---------------------------------------------------*/
-void puddleSpawner()
-{
-  if(millis() - 1000 > timer)
-  {
-    puddle.add( new Puddle() );
-    timer = millis();
-  }
-}
+
 /*--------------------------------------------------
                     PUDDLE CLASS
 --------------------------------------------------*/
-class Puddle
+class Puddle extends GameObject
 {
   PVector position;
   float approval;
@@ -27,6 +17,8 @@ class Puddle
   {
     // puddle gets smaller as time passes
     approval -= 0.1;
+    
+    checkPlayer();
   }
   
   void render()
@@ -42,26 +34,6 @@ class Puddle
     {
       approval-= 1;
       player.approval += 1;
-    }
-  }
-}
-
-
-/*--------------------------------------------------
-                    UPDATE PUDDLE
---------------------------------------------------*/
-void puddleUpdater() 
-{
-  for(int i = puddle.size() - 1; i >= 0; i--)
-  {
-    Puddle pu = puddle.get(i);
-    pu.update();
-    pu.render();
-    pu.checkPlayer();
-
-    if(pu.approval <= 10 || gamestate == GAMEEND)
-    {
-      puddle.remove(i);
     }
   }
 }
