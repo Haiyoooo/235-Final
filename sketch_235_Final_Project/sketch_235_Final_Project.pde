@@ -1,5 +1,6 @@
 ArrayList <GameObject> gameObject = new ArrayList<GameObject>();
 Player player;
+Enemy enemy1, enemy2, enemy3;
 
 boolean DEBUG = true;
 float ease;
@@ -7,8 +8,9 @@ float ease;
 boolean night;
 boolean photosynthesis;
 int timer; // for spawning puddles
-float gameTimer; // for total game time
+int gameTimer; // for total game time
 float step;
+float x, y, x1, y1;
 
 int gamestate;
 final int RUNNING = 1;
@@ -22,22 +24,20 @@ void setup()
   imageMode(CENTER);
   noStroke();
   gamestate = 1;
-  night = false;
+  night = true;
   timer = 0;
   gameTimer = 0;
   step = PI;
-  ease = 0.5;
+  ease = 0.006;
   frameRate(60);
   
   loadImages();
   loadSounds();
   
-  gameObject.add( new Enemy(width * .5, height * .5) );
-  gameObject.add( new Enemy(width * .1, height * .4) );
-  gameObject.add( new Enemy(width * .7, height * .9) );
-  
-  player = new Player();
-  gameObject.add( player );
+  gameObject.add( enemy1 = new Enemy(width * .5, height * .5) );
+  gameObject.add( enemy2 = new Enemy(width * .1, height * .4) );
+  gameObject.add( enemy3 = new Enemy(width * .7, height * .9) );
+  gameObject.add( player = new Player() );
 }
 
 void draw()
@@ -47,6 +47,9 @@ void draw()
     case RUNNING:
       gameTimer += 1;
       skyBox();
+      ground();
+      if(night) fogOfWar();
+     
       
       //spawner
       puddleSpawner();
@@ -60,23 +63,24 @@ void draw()
         obj.checkCollision();
         
       //despawner
-        if(obj.tab == "puddle" && (obj.wetness < 0 || gamestate == GAMEEND) )
+        if(obj.tab == "puddle" && ( obj.wetness < 0 || gamestate == GAMEEND) )
         {
           gameObject.remove(i);
         }
       }
       
       //night time
-      if(night)
-      {
-        
-        fogOfWar();
-      }
+
+
       hud();
       break;
       
     case GAMEEND:
       displayHighscore();
+      for(int i = gameObject.size() - 1; i >= 0; i--)
+      {
+        gameObject.remove(i);
+      }
   }
 
 

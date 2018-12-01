@@ -30,14 +30,11 @@ class Puddle extends GameObject
       player.wetness += 1;
       tint(100, 40);
       image(add_water, player.position.x, player.position.y - 40);
-    if(!slurpSound.isPlaying())
+      
+      if(!slurpSound.isPlaying())
       {  //<>//
           slurpSound.play(1);
       }
-    }
-    else if (playerDistanceTo(position) > size/2)
-    {
-      slurpSound.pause();
     }
   }
 }

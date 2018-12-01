@@ -2,14 +2,19 @@ class Player extends GameObject
 {
   float sugar;
   float speed;
+  float wetness_wither;
+  float wetness_drown;
   
   Player()
   {
     tab = "player";
-    wetness = 10000;
+    wetness = 400;
     position = new PVector(width/2, height/2);
     sugar = 30;
-    size = 50;
+    size = 100;
+    
+    wetness_wither = 100; //TODO: Show death limits on HUD
+    wetness_drown = 500;
 
   }
   
@@ -37,7 +42,7 @@ class Player extends GameObject
   
   void render()
   {
-    tint(easeOut(10, 60, sugar/100), 80, 80); //TODO: Change to wetness
+    tint(easeOut(10, 60, wetness/100), 80, 80);
     
     //check photosynthesis
     if(photosynthesis == true)
@@ -51,12 +56,29 @@ class Player extends GameObject
     image(player_body, position.x, position.y, size, size);
     
     //check wetness
-    if(wetness > 20 && wetness < 90)
+    if(night && (enemy1.isAggro() || enemy2.isAggro() || enemy3.isAggro()))
     {
-      image(player_faceHappy, position.x, position.y, size, size);
-    } else
+      image(player_faceScared, position.x, position.y, size, size);
+    }
+    else if (wetness > wetness_wither && wetness < wetness_drown)
     {
+      //healthy
+      image(player_faceHappy, position.x, position.y, size, size); 
+    }
+    else if (wetness < 200)
+    {
+      //too dry
       image(player_faceSick, position.x, position.y, size, size);
+      
+      tint(100); //TODO: LERP IT. Border gets clearer as the plant is getting drier.
+      image(screen_brown, width/2, height/2);
+    }
+    else if (wetness > 500)
+    {
+      //too wet
+      image(player_faceSick, position.x, position.y, size, size);
+      tint(100, 50);  //TODO: LERP THE TRANSFORM. Higher waves as the plant drowns.
+      image(screen_waves, width/2, height/2); 
     }
     
     tint(100); //remove tint
@@ -66,13 +88,12 @@ class Player extends GameObject
   void getSugar()
   {
     speed = 0;
-    wetness -= 10;
-    sugar += 10;
+    wetness -= 6;
+    sugar += 3;
     fill(0);
     ellipse(position.x, position.y, 10, 10);
     photosynthesis = true;
     image(add_sugar, position.x, position.y - random(40, 50));
   }
- 
 
 }

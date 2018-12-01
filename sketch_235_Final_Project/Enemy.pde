@@ -8,7 +8,7 @@ class Enemy extends GameObject
     tab = "enemy";
     wetness = 50;
     position = new PVector(posX, posY);
-    size = 50;
+    size = 100;
     
     zonePos = new PVector(posX, posY);
     zone = 400;
@@ -16,7 +16,14 @@ class Enemy extends GameObject
   
   void update()
   {
-    zonePos.add( random(-10, 10), random( -3, 3) ); //TODO: Restrict enemies from roaming off screen
+    zonePos.add( random(-5, 5), random(-3, 3) );
+    
+    //teleport offscreen enemies to random position
+    if (zonePos.x < 0 || zonePos.x > width || zonePos.y > height || zonePos.y < 230 )
+    {
+      zonePos.set(random(0, width), random(230, height));
+    }
+    
     if(night)
     {
       isAggro();
@@ -36,7 +43,7 @@ class Enemy extends GameObject
       ellipse(zonePos.x, zonePos.y, zone, zone);
       
       fill(100, 80, 80);
-      ellipse(position.x, position.y, size, size);
+      image(enemy_cow, position.x, position.y, size, size);
     }
   }
   
@@ -45,8 +52,8 @@ class Enemy extends GameObject
     if(playerDistanceTo(zonePos) < zone/2)
     {
       //chase
-      position.x = easeIn(position.x, player.position.x, ease);  //0.006
-      position.y = easeIn(position.y, player.position.y, ease);  //0.006
+      position.x = easeOut(position.x, player.position.x, ease);  //0.006
+      position.y = easeOut(position.y, player.position.y, ease);  //0.006
       return true;
     }
     //return home
@@ -59,8 +66,7 @@ class Enemy extends GameObject
   {
     if(playerDistanceTo(position) < size/2 && night == true)
     {
-      player.wetness --;
-      player.sugar --;
+      player.wetness--;
       wetness ++;
       translate(random(-1,1), random(-5,5) ); //screenshake
     }

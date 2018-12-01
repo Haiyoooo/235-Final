@@ -8,22 +8,13 @@ void debugger()
        + "\nwetness " + nf(player.wetness, 0, 0)
        + "\ngame timer " + nf(gameTimer/60, 0, 0)
        + "\nEASING" + nf(ease, 0, 0)
-       //+ "\nEnemies " + enemy.size()
-       //+ "\nPuddles " + puddle.size()
-       + "\nGame objects" + gameObject.size()
+       + "\nGame obj " + gameObject.size()
        , 10, 500);
-       
 
- 
-
- 
- 
 }
 /*--------------------DAY AND NIGHT----------------------*/
 void skyBox()
-{
-  float x, y, x1, y1;
-  
+{ 
   step += 0.01;  //0.05
   
   x = 150 * cos(step) + width/2;
@@ -35,12 +26,12 @@ void skyBox()
   color orange = color(90, 10, 100); //orange
   if(step % (2 * PI) > PI)
     {
-      fill(easeIn(55, 90, y/250), 50, 100, 1);
+      fill(easeIn(55, 90, y/250), 50, 100);
       night = false;
     }
   else 
     {
-      fill(90 * y/250, 50, easeIn(0, 100, y1/250), 1);
+      fill(90 * y/250, 50, easeIn(0, 100, y1/250));
       night = true;
     }
     
@@ -64,14 +55,14 @@ void skyBox()
     for(int i = 10; i > 0; i--)
     {   
       ellipse(x1, y1, i * 5, i * 5); //moon's static red glow
-    }
-    
-    
-    
-    //GROUND
-    fill(15, easeOut(40, 10, y/300), 80);
-    rect(0, 200, width, height);
-    
+    } 
+}
+
+void ground()
+{
+  //GROUND
+  fill(15, easeOut(40, 10, y/300), 80);
+  rect(0, 200, width, height);
 }
 
 /*------------------------DISTANCE COLLISION---------------------------*/
@@ -84,7 +75,6 @@ float playerDistanceTo(PVector position)
 /*------------------------GAME OVER---------------------------*/
 void displayHighscore()
 {
-  background(0);
   text("GAME OVER"
   + "\n you survived for " + nf(gameTimer/60, 0, 2) + " seconds", width/2, height/2);
 }
@@ -121,10 +111,10 @@ float easeOutBack(float start, float end, float t)
 /*---------------MAKE PUDDLES--------------------------*/
 void puddleSpawner()
 {
-  if(millis() - 1000 > timer)
+  if(gameTimer - 60 > timer)
   {
     gameObject.add( new Puddle() );
-    timer = millis();
+    timer = gameTimer;
   }
 }
 /*--------------------HUD-------------------------*/
@@ -139,12 +129,12 @@ void hud()
   
   //Water
   fill(60, 80, 70);
-  rect(x, y, 20, -player.wetness, 10);  //TODO: Restrict max length. Change tint.
+  rect(x, y, 20, -player.wetness, 10);
   image(HUD_water, x + 10, y + 33, 60, 60);
   
   //Sugar
   fill(15, 50, 80);
-  rect(x + 40, y, 20, -player.sugar * 10, 10); //TODO: Restrict max length. Remove tint.
+  rect(x + 40, y, 20, -player.sugar * 10, 10);
   image(HUD_sugar, x + 56, y + 33, 60, 60);
   println(mouseX + " " + mouseY);
   
@@ -154,22 +144,11 @@ void hud()
 }
 
 /*--------------------IMAGES-------------------------*/
-PImage player_body;
-PImage player_leaves;
-PImage player_faceHappy;
-PImage player_faceSick;
-PImage player_faceScared;
-PImage player_leavesClosed;
-PImage HUD_water;
-PImage HUD_sugar;
-PImage add_water;
-PImage add_sugar;
+PImage player_body, player_leaves, player_faceHappy, player_faceSick, player_faceScared, player_leavesClosed;
+PImage HUD_water, HUD_sugar, add_water, add_sugar;
 PImage enemy_cow;
-PImage arrow_down_red;
-PImage arrow_down_red2;
-PImage arrow_up_green;
-PImage arrow_up_green2;
-
+PImage arrow_down_red, arrow_down_red2, arrow_up_green, arrow_up_green2;
+PImage screen_brown, screen_waves;
 
 void loadImages()
 {
@@ -188,6 +167,8 @@ void loadImages()
   arrow_down_red2 = loadImage("downArrow_red2.png");
   arrow_up_green = loadImage("upArrow.png");
   arrow_up_green2 = loadImage("upArrow2.png");
+  screen_brown = loadImage("brownBorder.png");
+  screen_waves = loadImage("Waves.png");
 }
 
 /*--------------------SOUNDS-------------------------*/
@@ -213,9 +194,9 @@ void fogOfWar()
   beginShape();
   
   // darkness
-  fill(0);
-  vertex(0, 0);
-  vertex(width, 0);
+  fill(0, easeIn(100, 5, y1/200));
+  vertex(0, 200);
+  vertex(width, 200);
   vertex(width, height);
   vertex(0, height);
   
@@ -224,8 +205,8 @@ void fogOfWar()
   for(int i = 0; i < 360; i ++)
   {
    float a = radians(i);
-   float x = 200 * sin(a) + player.position.x;
-   float y = 200 * cos(a) + player.position.y;
+   float x = easeIn(200, width, y1/200) * sin(a) + player.position.x;
+   float y = easeIn(200, height, y1/200) * cos(a) + player.position.y;
    vertex(x, y);
   }
   endContour();
