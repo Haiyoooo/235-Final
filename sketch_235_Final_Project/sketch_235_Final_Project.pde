@@ -5,6 +5,7 @@ boolean DEBUG = true;
 float ease;
 
 boolean night;
+boolean photosynthesis;
 int timer; // for spawning puddles
 float gameTimer; // for total game time
 float step;
@@ -31,7 +32,6 @@ void setup()
   loadImages();
   loadSounds();
   
-  //enemySpawner();
   gameObject.add( new Enemy(width * .5, height * .5) );
   gameObject.add( new Enemy(width * .1, height * .4) );
   gameObject.add( new Enemy(width * .7, height * .9) );
@@ -57,6 +57,7 @@ void draw()
         GameObject obj = gameObject.get(i);
         obj.update();
         obj.render();
+        obj.checkCollision();
         
       //despawner
         if(obj.tab == "puddle" && (obj.wetness < 0 || gamestate == GAMEEND) )
@@ -68,10 +69,10 @@ void draw()
       //night time
       if(night)
       {
-        translate(random(-1,1), random(-5,5) ); //screenshake
+        
         fogOfWar();
       }
-      
+      hud();
       break;
       
     case GAMEEND:
@@ -108,12 +109,14 @@ void keyPressed()
   {
     setMove(keyCode, true);
     if(player.sugar > 0)player.sugar--;
-    if(key == ' ')player.getsugar();
+    if(key == ' ')player.getSugar();
   }
 }
  
 void keyReleased()
 {
+  photosynthesis = false;
+  
   if(gamestate == RUNNING)
   {
     setMove(keyCode, false);

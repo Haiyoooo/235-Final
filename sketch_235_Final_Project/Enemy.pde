@@ -8,6 +8,7 @@ class Enemy extends GameObject
     tab = "enemy";
     wetness = 50;
     position = new PVector(posX, posY);
+    size = 50;
     
     zonePos = new PVector(posX, posY);
     zone = 400;
@@ -35,7 +36,7 @@ class Enemy extends GameObject
       ellipse(zonePos.x, zonePos.y, zone, zone);
       
       fill(100, 80, 80);
-      ellipse(position.x, position.y, 50, 50);
+      ellipse(position.x, position.y, size, size);
     }
   }
   
@@ -52,6 +53,17 @@ class Enemy extends GameObject
     position.x = easeOut(position.x, zonePos.x, 0.002);
     position.y = easeOut(position.y, zonePos.y, 0.002);
     return false;
+  }
+  
+  void checkCollision()
+  {
+    if(playerDistanceTo(position) < size/2 && night == true)
+    {
+      player.wetness --;
+      player.sugar --;
+      wetness ++;
+      translate(random(-1,1), random(-5,5) ); //screenshake
+    }
   }
   
 }

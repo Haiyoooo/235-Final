@@ -5,36 +5,39 @@ class Puddle extends GameObject
     tab = "puddle";
     wetness = random(60, 100);
     position = new PVector(random(0, width), random(250, height));
+    size = wetness;
   }
   
   void update()
   {
     // puddle gets smaller as time passes
     wetness -= 0.1;
-    
-    checkPlayer();
+    size = wetness;
   }
   
   void render()
   {
     fill(60, 80, 70);
-    ellipse(position.x, position.y, wetness, wetness);
+    ellipse(position.x, position.y, size, size);
   }
   
-  void checkPlayer()
+  void checkCollision()
   {
     //if the player is touching the puddle, the player absorbs the puddle
-    if(playerDistanceTo(position) < wetness/2)
+    if(playerDistanceTo(position) < size/2)
     {
       wetness-= 1;
       player.wetness += 1;
-        if(!slurpSound.isPlaying())
-        { 
+      tint(100, 40);
+      image(add_water, player.position.x, player.position.y - 40);
+    if(!slurpSound.isPlaying())
+      {  //<>//
           slurpSound.play(1);
-        }
-    //} else if (slurpSound.isPlaying())
-    //{
-    //  slurpSound.pause();
+      }
+    }
+    else if (playerDistanceTo(position) > size/2)
+    {
+      slurpSound.pause();
     }
   }
 }

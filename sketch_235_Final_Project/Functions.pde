@@ -13,12 +13,9 @@ void debugger()
        + "\nGame objects" + gameObject.size()
        , 10, 500);
        
- fill(15, 50, 80);
- rectMode(CORNER);
- rect(10, 10, player.sugar * 10, 10);
+
  
- fill(60, 80, 70);
-  rect(10, 20, player.wetness, 10);
+
  
  
 }
@@ -130,6 +127,31 @@ void puddleSpawner()
     timer = millis();
   }
 }
+/*--------------------HUD-------------------------*/
+
+void hud()
+{
+  float x = 710;
+  float y = 730;
+
+  stroke(0);
+  strokeWeight(5);
+  
+  //Water
+  fill(60, 80, 70);
+  rect(x, y, 20, -player.wetness, 10);  //TODO: Restrict max length. Change tint.
+  image(HUD_water, x + 10, y + 33, 60, 60);
+  
+  //Sugar
+  fill(15, 50, 80);
+  rect(x + 40, y, 20, -player.sugar * 10, 10); //TODO: Restrict max length. Remove tint.
+  image(HUD_sugar, x + 56, y + 33, 60, 60);
+  println(mouseX + " " + mouseY);
+  
+
+  
+  noStroke();
+}
 
 /*--------------------IMAGES-------------------------*/
 PImage player_body;
@@ -137,6 +159,17 @@ PImage player_leaves;
 PImage player_faceHappy;
 PImage player_faceSick;
 PImage player_faceScared;
+PImage player_leavesClosed;
+PImage HUD_water;
+PImage HUD_sugar;
+PImage add_water;
+PImage add_sugar;
+PImage enemy_cow;
+PImage arrow_down_red;
+PImage arrow_down_red2;
+PImage arrow_up_green;
+PImage arrow_up_green2;
+
 
 void loadImages()
 {
@@ -145,6 +178,16 @@ void loadImages()
   player_faceHappy = loadImage("Player_facehappy.png");
   player_faceSick = loadImage("Player_facesick.png");
   player_faceScared = loadImage("Player_facescared.png");
+  HUD_water = loadImage("HUD_water.png");
+  HUD_sugar = loadImage("HUD_sugar.png");
+  add_water = loadImage("add_water.png");
+  add_sugar = loadImage("add_sugar.png");
+  player_leavesClosed = loadImage("Player_leavesClosed.png");
+  enemy_cow = loadImage("Enemy.png");
+  arrow_down_red = loadImage("downArrow_red.png");
+  arrow_down_red2 = loadImage("downArrow_red2.png");
+  arrow_up_green = loadImage("upArrow.png");
+  arrow_up_green2 = loadImage("upArrow2.png");
 }
 
 /*--------------------SOUNDS-------------------------*/
@@ -160,6 +203,7 @@ void loadSounds()
 {
   minim = new Minim(this);
   slurpSound = minim.loadFile("166158__adam-n__slurp.wav");
+  slurpSound.loop();
 }
 
 /*--------------------FOG-------------------------*/

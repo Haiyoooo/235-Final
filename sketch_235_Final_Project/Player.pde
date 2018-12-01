@@ -1,7 +1,6 @@
 class Player extends GameObject
 {
   float sugar;
-  float size;
   float speed;
   
   Player()
@@ -16,7 +15,6 @@ class Player extends GameObject
   
   void update()
   {
-    sugar = constrain(sugar, 0, 100);
     wetness -=0.01;
     
     if(sugar > 0)
@@ -34,15 +32,25 @@ class Player extends GameObject
     
     if(wetness < 0)gamestate = GAMEEND;
 
+    sugar = constrain(sugar, 0, 100);
   }
   
   void render()
   {
-    tint(easeOut(10, 60, sugar/100), 80, 80);
-    //ellipse(position.x, position.y, size, size);
-    image(player_leaves, position.x, position.y, size, size);
+    tint(easeOut(10, 60, sugar/100), 80, 80); //TODO: Change to wetness
+    
+    //check photosynthesis
+    if(photosynthesis == true)
+    {
+      image(player_leaves, position.x, position.y, size, size);
+    } else
+    {
+      image(player_leavesClosed, position.x, position.y, size, size);
+    }
+    
     image(player_body, position.x, position.y, size, size);
     
+    //check wetness
     if(wetness > 20 && wetness < 90)
     {
       image(player_faceHappy, position.x, position.y, size, size);
@@ -51,16 +59,19 @@ class Player extends GameObject
       image(player_faceSick, position.x, position.y, size, size);
     }
     
+    tint(100); //remove tint
 
   }
   
-  void getsugar()
+  void getSugar()
   {
     speed = 0;
     wetness -= 10;
     sugar += 10;
     fill(0);
     ellipse(position.x, position.y, 10, 10);
+    photosynthesis = true;
+    image(add_sugar, position.x, position.y - random(40, 50));
   }
  
 
