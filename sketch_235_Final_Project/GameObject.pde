@@ -4,6 +4,7 @@ class GameObject
   PVector position;
   String tab;
   float size;
+  int state;
   
   void render(){};
   void update(){};

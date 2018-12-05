@@ -9,35 +9,45 @@ void debugger()
        + "\ngame timer " + nf(gameTimer/60, 0, 0)
        + "\nEASING" + nf(ease, 0, 0)
        + "\nGame obj " + gameObject.size()
-       + "\nisUP " + isUp
-       + "\nisUP " + isDown
-       + "\nisLEFT " + isLeft
-       + "\nisRight " + isRight
-       + "\nSpeed " + player.speed
-       , 10, 500);
+       //+ "\nisUP " + isUp
+       //+ "\nisUP " + isDown
+       //+ "\nisLEFT " + isLeft
+       //+ "\nisRight " + isRight
+       //+ "\nSpeed " + player.speed
+       + "\nPhotosytnethesis " + player.state
+       + "\nEnemy1 " + enemy1.state
+       + "\nEnemy2 " + enemy2.state
+       + "\nEnemy3 " + enemy3.state
+       , 10, 300);
 
 }
 /*--------------------DAY AND NIGHT----------------------*/
 void skyBox()
 { 
-  step += 0.001;  //0.05
+  step += sunSpeed;  //0.05
   
   x = 150 * cos(step) + width/2 + shake;
   y = 150 * sin(step) + 200 + shake;
   x1 = 150 * cos(step + PI) + width/2 + shake;
   y1 = 150 * sin(step + PI) + 200 + shake;
   
-  color blue = color(55, 30, 100); //blue
-  color orange = color(90, 10, 100); //orange
+  colorMode(HSB, 100);
+  color c1 = color(55, 50, 100); //blue
+  color c2 = color(90, 20, 100); //pink
+  color c3 = color(80, 100, 10); //dark
   if(step % (2 * PI) > PI)
     {
-      fill(easeIn(55, 90, y/250), 50, 100);
+      //sky day
+      fill(lerpColor(c1, c2, map(y, 50, 200, 0, 1)));
       night = false;
+      println(x);
     }
   else 
     {
-      fill(90 * y/250, 50, easeIn(0, 100, y1/250));
+      //sky night
+      fill(lerpColor(c3, c2, map(y1, 50, 200, 0, 1))); //easeOut(0, 1, y1/250)
       night = true;
+      println(x);
     }
     
     rect(0, 0, width, 200);
@@ -113,10 +123,43 @@ float easeOutBack(float start, float end, float t)
   return start + (end - start) * (t * t * ((s + 1) * t + s) + 1);
 }
 
+//"Ease In-Out" moves slowly at first, accelerates near t=0.5, and then decelerates again.
+float easeInOut(float start, float end, float t)
+{
+  return start + (end - start) *
+(t * t * (3.0f - 2.0f * t));
+}
+
+//"Ease Out Bounce" bounces a few times before coming to a rest at end.
+float easeOutBounce(float start, float end, float t)
+{
+  if (t < (1 / 2.75f)) {
+    return start + (end - start) *
+(7.5625f*t*t);
+  }
+  else if (t < (2 / 2.75f)) {
+    float postFix = t -= (1.5f / 2.75f);
+    return start + (end - start) *
+(7.5625f*(postFix)*t + .75f);
+  }
+  else if (t < (2.5 / 2.75)) {
+    float postFix = t -= (2.25f / 2.75f);
+    return start + (end - start) *
+(7.5625f*(postFix)*t + .9375f);
+  }
+  else {
+    float postFix = t -= (2.625f / 2.75f);
+    return start + (end - start) *
+(7.5625f*(postFix)*t + .984375f);
+  }
+}
+
+
+
 /*---------------MAKE PUDDLES--------------------------*/
 void puddleSpawner()
 {
-  if(gameTimer - 20 > timer)
+  if(gameTimer - puddleSpawnDelay > timer)
   {
     gameObject.add( new Puddle() );
     timer = gameTimer;
@@ -137,13 +180,15 @@ void hud()
   //Screen Warnings
   if(player.wetness < player.wetness_wither)
   {
+    // dry effect
     tint(100);
     image(screen_brown, width/2, height/2);
   }
   else if(player.wetness > player.wetness_drown)
   {
-    tint(100, lerp(0, 150, (player.wetness - player.wetness_drown)/500));
-    image(screen_waves, width/2, height/2 ); 
+    //wave effect
+    tint(100, easeOut(10, 50, (player.wetness - player.wetness_drown)/(player.wetness_death - player.wetness_drown)));
+    image(screen_waves, width/2, easeOut(800, 400, (player.wetness - player.wetness_drown)/(player.wetness_death - player.wetness_drown))); 
   }
   
   imageMode(CORNER);
@@ -159,35 +204,10 @@ void hud()
   fill(100);
   rect(x + 60, y + 50, map(player.sugar, 0, 100, 0, 500), 20, 10);
   image(HUD_sugar, x, y + 50, 40, 40);
-  
-  //CO2
-  fill(90);
-  rect(x + 60, y + 70, map(player.co2, 0, 500, 0, 500), 20, 10);
-  textSize(20);
-  fill(0);
-  text("CO2", x, y + 100);
+ 
   
   imageMode(CENTER);
-  
-  ////CO2
-  //fill(90);
-  //rect(x + 60, y + 80, player.co2, 20, 10);
-  
-  //  //Water
-  //fill(60, 80, 70);
-  //rect(x, y, 20, -map(player.wetness, 0, player.wetness_death, 0, 500), 10);
-  //fill(100, 80, 80);
-  ////line(x-10, y - player.wetness_death, x, y - player.wetness_death);
-  //image(HUD_water, x + 10, y+33, 60, 60);
-  
-  ////Sugar
-  //fill(15, 50, 80);
-  //rect(x + 40, y, 20, -map(player.sugar, 0, 100, 0, 500), 10);
-  //image(HUD_sugar, x + 56, y + 33, 60, 60);
-  
-  ////CO2
-  //fill(90);
-  //rect(x - 40, y, 20, -player.co2, 10);
+
   
   
   noStroke();
@@ -231,18 +251,11 @@ AudioPlayer slurpSound;
 AudioPlayer roosterSound;
 AudioPlayer cricketSound;
 
-import processing.sound.*;
-AudioIn in;
-Amplitude amp;
-
 void loadSounds()
 {
   minim = new Minim(this);
-  in = new AudioIn(this, 0);
-  amp = new Amplitude(this);
+
   slurpSound = minim.loadFile("166158__adam-n__slurp.wav");
-  amp.input(in);
-  
   roosterSound = minim.loadFile("Rooster-crowing-sound.mp3");
   cricketSound = minim.loadFile("121511__damonmensch__cricket-sound.mp3");
 }

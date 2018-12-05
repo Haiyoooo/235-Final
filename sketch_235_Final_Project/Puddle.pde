@@ -1,5 +1,6 @@
 class Puddle extends GameObject
 {
+  
   Puddle()
   {
     tab = "puddle";
@@ -11,7 +12,7 @@ class Puddle extends GameObject
   void update()
   {
     // puddle gets smaller as time passes
-    wetness -= 0.5;
+    if(!night) wetness -= puddleEvaporateRate;
     size = wetness * 1.5;
   }
   
@@ -26,8 +27,8 @@ class Puddle extends GameObject
     //if the player is touching the puddle, the player absorbs the puddle
     if(playerDistanceTo(position) < size/2)
     {
-      wetness-= 0.5;
-      player.wetness += 0.5;
+      wetness-= puddleAbsorbRate;
+      player.wetness += puddleAbsorbRate;
       tint(100, 40);
       image(add_water, player.position.x, player.position.y - 70);
       

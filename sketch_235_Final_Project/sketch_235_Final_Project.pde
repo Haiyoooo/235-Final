@@ -3,25 +3,32 @@ Player player;
 Enemy enemy1, enemy2, enemy3;
 
 
-boolean DEBUG = false;
+boolean DEBUG = true;
 BufferedReader reader; //(C) https://github.com/michael-mj-john/LoaderExample/blob/master/dataLoader.pde
 String line;
 int lastLoad;
 
 boolean night;
-boolean photosynthesis;
 boolean screenshake;
 int timer; // for spawning puddles
 int gameTimer; // divide by 60 to get seconds
+int atkTimer;
 float step;
 float x, y, x1, y1;
-float ease;
 
 int gamestate;
 final int START = 0;
 final int RUNNING = 1;
 final int GAMEEND = 2;
 
+float sunSpeed;
+float ease;
+float puddleAbsorbRate, puddleEvaporateRate, puddleSpawnDelay;
+float enemyEatRate;
+float waterY; //413 = whole ground flooded
+float adjust;
+float enemyBurnSugarRate, enemyStartSugar, enemyFullSugar;
+float photoRateDay, photoRateNight;
 
 void setup()
 {
@@ -29,28 +36,35 @@ void setup()
   colorMode(HSB, 100);
   imageMode(CENTER);
   noStroke();
+
+  loadImages();
+  loadSounds();
+  
+  initialize();
+  readFromFile(); //I'll load the parameters first, even when not in debug mode  
+}
+
+void initialize()
+{
   gamestate = 0;
-  night = false;
+  night = true;
   screenshake = false;
   timer = 0;
   gameTimer = 0;
+  atkTimer = 0;
   step = PI;
-  ease = 0.006;
   frameRate(60);
-  
-  loadImages();
-  loadSounds();
   
   gameObject.add( enemy1 = new Enemy(width * .5, height * .5) );
   gameObject.add( enemy2 = new Enemy(width * .1, height * .4) );
   gameObject.add( enemy3 = new Enemy(width * .7, height * .9) );
   gameObject.add( player = new Player() );
-  
-  readFromFile(); //I'll load the parameters first, even when not in debug mode  
 }
 
 void draw()
 { 
+  
+  
   switch(gamestate)
   {
     case START:
@@ -58,13 +72,12 @@ void draw()
       break;
     case RUNNING:
       gameTimer += 1;
-      skyBox();
+      //skyBox();
       ground();
       
       if(screenshake) shake = random(-5,5);
       else shake = 0;
       
-      //spawner
       puddleSpawner();
       
       //updater
@@ -78,8 +91,7 @@ void draw()
         //puddle despawner
         if(obj.tab == "puddle" && ( obj.wetness < 0 || gamestate == GAMEEND) ) gameObject.remove(i);
       }
-      if(night) fogOfWar();
-      player.getCarbondioxide();
+      //if(night) fogOfWar();
       hud();
       break;
       
@@ -95,6 +107,7 @@ void draw()
   {
     debugger();
     if( gameTimer % 300 == 0 )readFromFile(); //five second load interval
+    //image(screen_waves, width/2, waterY);
   }
  
 }
@@ -106,7 +119,7 @@ void mousePressed()
     gamestate++;
     roosterSound.play(1);
   }
-  else if(gamestate == GAMEEND) setup();  
+  else if(gamestate == GAMEEND) initialize();  
 }
 
 /*---------------------KEYBOARD-------------------------------*/
@@ -117,15 +130,15 @@ void keyPressed()
 {
   if(gamestate == RUNNING)
   {
-    setMove(keyCode, true);
+    
     if(key == ' ') player.getSugar();
+    else setMove(keyCode, true);
   }
 }
  
 void keyReleased()
 {
   setMove(keyCode, false);
-  photosynthesis = false;
   player.speed = 0;
 }
 
@@ -150,27 +163,21 @@ boolean setMove(int k, boolean b)
   }
 }
 
-/*This function loads gameplay parameters from a file called "data.txt"
-"data.txt" must be in the same directory as the .pde file
-Error handling could be better. 
-Note that data.txt format is name/value pairs, tab separated
-*/
 void readFromFile() {
+  
+  final int SIZE = 21;
+  
   reader = createReader("data.txt"); 
   if( reader == null ) { 
     println( "open failure" ); 
     return;
   }
   //must re-size this array depending on how many parameters you are using (an ArrayList would be better)
-  float parameterArray[] = new float[2]; 
+  float parameterArray[] = new float[SIZE]; 
   int i=0;
 
  // this is one of the rare places where a "do" loop is called for
  do {
-   //'try/catch' is Java's exception handling. I am not an expert in this, 
-   //this is based on example code. When you hit the end of the file,
-   //it throws an exception, which is "caught" and the program moves on.
-   //(it seems like there should be a more elegant way to do this)
    try {
       line = reader.readLine(); // this is a "buffered read", a Processing feature
     } 
@@ -180,7 +187,7 @@ void readFromFile() {
     }
     if( line != null ) {
       String[] params = split( line, TAB ); //"split" is a common String function. note that this means your data file must be TAB separated fields
-      println( params[0], params[1] ); //just a debug feature
+      println(params[0], params[1]);
       parameterArray[i++] = Float.valueOf(params[1]);//inserting file values into my parameters array
     }
   }
@@ -188,8 +195,23 @@ void readFromFile() {
   
   // assign loaded parameters to gameplay variables 
   ease = parameterArray[0];
-  step = parameterArray[1];
-  
-  lastLoad = millis();
-  
+  sunSpeed = parameterArray[1];
+  player.maxSugar = parameterArray[2];
+  player.minSpeed = parameterArray[3];
+  player.maxSpeed = parameterArray[4];
+  player.minSize = parameterArray[5];
+  player.maxSize = parameterArray[6];
+  puddleAbsorbRate = parameterArray[7];
+  puddleSpawnDelay = parameterArray[8];
+  puddleEvaporateRate = parameterArray[9];
+  adjust = parameterArray[10];
+  player.wetness_drown = parameterArray[11];
+  player.wetness_wither = parameterArray[12];
+  waterY = parameterArray[13];
+  enemyEatRate = parameterArray[14];
+  enemyBurnSugarRate = parameterArray[15];
+  enemyStartSugar = parameterArray[16];
+  enemyFullSugar = parameterArray[17];
+  photoRateDay = parameterArray[18];
+  photoRateNight = parameterArray[19];
 }
