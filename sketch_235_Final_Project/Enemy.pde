@@ -64,11 +64,16 @@ class Enemy extends GameObject
   
   void checkCollision()
   {
-    if(playerDistanceTo(position) < size/2 && night == true)
+    if(playerDistanceTo(position) < size/2 && night)
     {
-      player.wetness--;
-      wetness ++;
-      translate(random(-1,1), random(-5,5) ); //screenshake
+      textSize(40);
+      text("It's eating your sugar!!!", width/2, 100);
+      player.sugar --;
+      screenshake = true;
+    }
+    else
+    {
+      screenshake = false;
     }
   }
   

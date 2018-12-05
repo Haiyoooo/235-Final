@@ -9,18 +9,23 @@ void debugger()
        + "\ngame timer " + nf(gameTimer/60, 0, 0)
        + "\nEASING" + nf(ease, 0, 0)
        + "\nGame obj " + gameObject.size()
+       + "\nisUP " + isUp
+       + "\nisUP " + isDown
+       + "\nisLEFT " + isLeft
+       + "\nisRight " + isRight
+       + "\nSpeed " + player.speed
        , 10, 500);
 
 }
 /*--------------------DAY AND NIGHT----------------------*/
 void skyBox()
 { 
-  step += 0.01;  //0.05
+  step += 0.001;  //0.05
   
-  x = 150 * cos(step) + width/2;
-  y = 150 * sin(step) + 200;
-  x1 = 150 * cos(step + PI) + width/2;
-  y1 = 150 * sin(step + PI) + 200;
+  x = 150 * cos(step) + width/2 + shake;
+  y = 150 * sin(step) + 200 + shake;
+  x1 = 150 * cos(step + PI) + width/2 + shake;
+  y1 = 150 * sin(step + PI) + 200 + shake;
   
   color blue = color(55, 30, 100); //blue
   color orange = color(90, 10, 100); //orange
@@ -62,7 +67,7 @@ void ground()
 {
   //GROUND
   fill(15, easeOut(40, 10, y/300), 80);
-  rect(0, 200, width, height);
+  rect(0 + shake, 200 + shake, width, height);
 }
 
 /*------------------------DISTANCE COLLISION---------------------------*/
@@ -111,34 +116,79 @@ float easeOutBack(float start, float end, float t)
 /*---------------MAKE PUDDLES--------------------------*/
 void puddleSpawner()
 {
-  if(gameTimer - 60 > timer)
+  if(gameTimer - 20 > timer)
   {
     gameObject.add( new Puddle() );
     timer = gameTimer;
   }
 }
 /*--------------------HUD-------------------------*/
+float shake = 0;
 
 void hud()
 {
-  float x = 710;
-  float y = 730;
+
+  float x = 50 + shake;
+  float y = 650 + shake;
 
   stroke(0);
   strokeWeight(5);
   
+  //Screen Warnings
+  if(player.wetness < player.wetness_wither)
+  {
+    tint(100);
+    image(screen_brown, width/2, height/2);
+  }
+  else if(player.wetness > player.wetness_drown)
+  {
+    tint(100, lerp(0, 150, (player.wetness - player.wetness_drown)/500));
+    image(screen_waves, width/2, height/2 ); 
+  }
+  
+  imageMode(CORNER);
+  
   //Water
   fill(60, 80, 70);
-  rect(x, y, 20, -player.wetness, 10);
-  image(HUD_water, x + 10, y + 33, 60, 60);
+  rect(x + 60, y + 20, map(player.wetness, 0, player.wetness_death, 0, 500), 30, 50);
+  fill(100, 80, 80);
+  image(HUD_water, x - 20, y - 30, 80, 80);
   
+  strokeWeight(3);
   //Sugar
-  fill(15, 50, 80);
-  rect(x + 40, y, 20, -player.sugar * 10, 10);
-  image(HUD_sugar, x + 56, y + 33, 60, 60);
-  println(mouseX + " " + mouseY);
+  fill(100);
+  rect(x + 60, y + 50, map(player.sugar, 0, 100, 0, 500), 20, 10);
+  image(HUD_sugar, x, y + 50, 40, 40);
   
-
+  //CO2
+  fill(90);
+  rect(x + 60, y + 70, map(player.co2, 0, 500, 0, 500), 20, 10);
+  textSize(20);
+  fill(0);
+  text("CO2", x, y + 100);
+  
+  imageMode(CENTER);
+  
+  ////CO2
+  //fill(90);
+  //rect(x + 60, y + 80, player.co2, 20, 10);
+  
+  //  //Water
+  //fill(60, 80, 70);
+  //rect(x, y, 20, -map(player.wetness, 0, player.wetness_death, 0, 500), 10);
+  //fill(100, 80, 80);
+  ////line(x-10, y - player.wetness_death, x, y - player.wetness_death);
+  //image(HUD_water, x + 10, y+33, 60, 60);
+  
+  ////Sugar
+  //fill(15, 50, 80);
+  //rect(x + 40, y, 20, -map(player.sugar, 0, 100, 0, 500), 10);
+  //image(HUD_sugar, x + 56, y + 33, 60, 60);
+  
+  ////CO2
+  //fill(90);
+  //rect(x - 40, y, 20, -player.co2, 10);
+  
   
   noStroke();
 }
@@ -149,6 +199,7 @@ PImage HUD_water, HUD_sugar, add_water, add_sugar;
 PImage enemy_cow;
 PImage arrow_down_red, arrow_down_red2, arrow_up_green, arrow_up_green2;
 PImage screen_brown, screen_waves;
+PImage instructions;
 
 void loadImages()
 {
@@ -169,6 +220,7 @@ void loadImages()
   arrow_up_green2 = loadImage("upArrow2.png");
   screen_brown = loadImage("brownBorder.png");
   screen_waves = loadImage("Waves.png");
+  instructions = loadImage("instructions2.jpg");
 }
 
 /*--------------------SOUNDS-------------------------*/
@@ -176,15 +228,23 @@ void loadImages()
 import ddf.minim.*;
 Minim minim;
 AudioPlayer slurpSound;
-AudioPlayer bgSound;
-AudioPlayer teleportSound;
-AudioPlayer dramaticSound;
+AudioPlayer roosterSound;
+AudioPlayer cricketSound;
+
+import processing.sound.*;
+AudioIn in;
+Amplitude amp;
 
 void loadSounds()
 {
   minim = new Minim(this);
+  in = new AudioIn(this, 0);
+  amp = new Amplitude(this);
   slurpSound = minim.loadFile("166158__adam-n__slurp.wav");
-  slurpSound.loop();
+  amp.input(in);
+  
+  roosterSound = minim.loadFile("Rooster-crowing-sound.mp3");
+  cricketSound = minim.loadFile("121511__damonmensch__cricket-sound.mp3");
 }
 
 /*--------------------FOG-------------------------*/
@@ -205,8 +265,8 @@ void fogOfWar()
   for(int i = 0; i < 360; i ++)
   {
    float a = radians(i);
-   float x = easeIn(200, width, y1/200) * sin(a) + player.position.x;
-   float y = easeIn(200, height, y1/200) * cos(a) + player.position.y;
+   float x = easeIn(200, width, y1/50) * sin(a) + player.position.x + shake;
+   float y = easeIn(200, height, y1/50) * cos(a) + player.position.y + shake;
    vertex(x, y);
   }
   endContour();
