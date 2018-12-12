@@ -1,5 +1,6 @@
 class Bullets extends GameObjects
 {
+  PVector position;
   PVector velocity;
   PVector acceleration;
   PVector mouse;
@@ -9,7 +10,6 @@ class Bullets extends GameObjects
   
   Bullets(float tempX, float tempY)
   {
-    tab = "BUllets";
     position = new PVector(tempX, tempY);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
@@ -42,12 +42,12 @@ class Bullets extends GameObjects
   
   void dealDamage()
   {
-    for(int i = gameObject.size() - 1; i > -1; i--)
+    for(int i = gameObjects.size() - 1; i > -1; i--)
     {
-      GameObject obj = gameObject.get(i);
-      if(obj.tab = "Enemy")
+      GameObjects obj = gameObjects.get(i);
+      if(obj.tab == "Enemy")
       {
-        if(checkCollision(position, enemy.position, size, enemy.size) ) earth.health -= 10;
+        if(checkCollision(position, obj.position, size, obj.size) ) earth.health -= 10;
       }
     }
   }

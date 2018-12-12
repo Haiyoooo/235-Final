@@ -1,4 +1,5 @@
 ArrayList <GameObjects> gameObjects = new ArrayList<GameObjects>();
+ArrayList <Bullets> bullets = new ArrayList<Bullets>();
 Earth earth;
 Enemy enemy1;
 
@@ -20,11 +21,7 @@ void setup()
   
   gameObjects.add(earth = new Earth());
   gameObjects.add(new Enemy());
-  gameObjects.add(new Enemy());
-  gameObjects.add(new Enemy());
-  gameObjects.add(new Enemy());
-  gameObjects.add(new Enemy());
-  
+  gameObjects.add(new SpecialEnemy());
 }
 
 void draw()

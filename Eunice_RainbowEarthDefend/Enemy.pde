@@ -37,3 +37,19 @@ class Enemy extends GameObjects
     ellipse(position.x, position.y, size, size);
   }
 }
+
+class SpecialEnemy extends Enemy
+{
+  SpecialEnemy()
+  {
+    position = new PVector(0, 100);
+    size = 25;
+    orbitSpeed = 5;
+  }
+  
+  void update()
+  {
+    //moves across the top of the screen
+    position.add(orbitSpeed,0);
+  }
+}

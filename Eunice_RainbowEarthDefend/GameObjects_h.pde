@@ -1,4 +1,4 @@
-class GameObjects
+abstract class GameObjects
 {
   PVector position;
   float size;
