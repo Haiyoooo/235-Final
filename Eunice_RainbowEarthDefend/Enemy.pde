@@ -5,18 +5,19 @@ class Enemy extends GameObjects
   float approachSpeed;
   float distToEarth;
 
-  Enemy()
+  Enemy(float tempOrbit)
   {
     tab = "Enemy";
-    health = 100;
+    health = 1;
     size = 50;
     angle = random(0, PI); //start position on the circumference
     
     position = new PVector(0,0);
     
-    distToEarth = 250;
-    orbitSpeed = 0.01;
+    distToEarth = random(250, 300);
+    orbitSpeed = tempOrbit;
     approachSpeed = 10;
+
   }
   
   void update()
@@ -24,40 +25,64 @@ class Enemy extends GameObjects
     //rotates closer to earth
     position.x = distToEarth * cos(angle += orbitSpeed) + width/2;
     position.y = distToEarth * sin(angle += orbitSpeed) + height/2;
-    if(frameCount % 120 == 0) distToEarth -= approachSpeed; //approach in sudden jumps
+    if(frameCount % 120 == 0)
+    {
+      distToEarth -= approachSpeed;
+      orbitSpeed += 0.001; //approach in sudden jumps
+    }
     
-    //check collision, deal damage
-    if(checkCollision(position, earth.position, size, earth.size) ) earth.health -= 10;
+    //attack earth, deal damage
+    if(checkCollision(position, earth.position, size, earth.size) ) 
+    {
+      earth.health -= 10;
+      health = 0;
+    }
   }
   
   void render()
   {   
-    fill(10, 80, 100);
+    noStroke();
+    fill(100, 80, 100);
     ellipse(position.x, position.y, size, size);
-    fill(0);
-    text(health, position.x, position.y);
   }
     
   boolean isDead()
   {
-    if(health<1) return true;
+    if(health<1)
+    {
+      score += 100;
+      return true;
+    }
     return false;
   }
 }
 
 class SpecialEnemy extends Enemy
 {
-  SpecialEnemy()
+  SpecialEnemy(float tempOrbit)
   {
-    position = new PVector(0, 100);
+    super(tempOrbit);
+    position = new PVector(0, height/2);
     size = 25;
-    orbitSpeed = 5;
+    orbitSpeed = tempOrbit;
+    health = 1;
   }
   
   void update()
   {
     //moves across the top of the screen
     position.add(orbitSpeed,0);
+  }
+  
+      
+  boolean isDead()
+  {
+    if(health<1)
+    {
+      score += 1000;
+      return true;
+    }
+    return false;
   }
 
 }

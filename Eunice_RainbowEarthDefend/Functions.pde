@@ -11,10 +11,22 @@ boolean checkCollision(PVector position, PVector other, float size, float otherS
   else return false;
 }
 
-void addParticles() //Can i put this under the mover class?
+void renderWall()
 {
-   if (mousePressed && (mouseButton == RIGHT) && bulletCount < 20 )
+  if(borderActive)
   {
-     gameObjects.add( new Bullets(earth.position.x, earth.position.y) );
+    float xPos = map(mouseX, 0, width, 0, 100);
+    stroke(xPos, 50, 100, 50);
+    strokeWeight(5);
+    noFill();
+    rectMode(CENTER);
+    rect(width/2, height/2, width - border * 2, height - border * 2);
   }
+}
+
+void showScore()
+{
+  fill(100);
+  textSize(30);
+  text(score, width/2, 50);
 }
