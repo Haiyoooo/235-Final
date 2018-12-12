@@ -3,7 +3,7 @@ Player player;
 Enemy enemy1, enemy2, enemy3;
 
 
-boolean DEBUG = true;
+boolean DEBUG = false;
 BufferedReader reader; //(C) https://github.com/michael-mj-john/LoaderExample/blob/master/dataLoader.pde
 String line;
 int lastLoad;
@@ -47,7 +47,7 @@ void setup()
 void initialize()
 {
   gamestate = 0;
-  night = true;
+  night = false;
   screenshake = false;
   timer = 0;
   gameTimer = 0;
@@ -55,9 +55,9 @@ void initialize()
   step = PI;
   frameRate(60);
   
-  gameObject.add( enemy1 = new Enemy(width * .5, height * .5) );
-  gameObject.add( enemy2 = new Enemy(width * .1, height * .4) );
-  gameObject.add( enemy3 = new Enemy(width * .7, height * .9) );
+  gameObject.add( enemy1 = new Enemy(width, height * .5) );
+  gameObject.add( enemy2 = new Enemy(0, height * .4) );
+  gameObject.add( enemy3 = new Enemy(width, height * .9) );
   gameObject.add( player = new Player() );
 }
 
@@ -72,7 +72,7 @@ void draw()
       break;
     case RUNNING:
       gameTimer += 1;
-      //skyBox();
+      skyBox();
       ground();
       
       if(screenshake) shake = random(-5,5);
@@ -91,7 +91,7 @@ void draw()
         //puddle despawner
         if(obj.tab == "puddle" && ( obj.wetness < 0 || gamestate == GAMEEND) ) gameObject.remove(i);
       }
-      //if(night) fogOfWar();
+      if(night) fogOfWar();
       hud();
       break;
       
