@@ -25,6 +25,8 @@ class Bullets extends GameObjects
     position.add(velocity);
     velocity.add(accelerationCalculator());
     velocity.limit(10);
+    
+    dealDamage();
   }
   
   void render()
@@ -45,10 +47,7 @@ class Bullets extends GameObjects
     for(int i = gameObjects.size() - 1; i > -1; i--)
     {
       GameObjects obj = gameObjects.get(i);
-      if(obj.tab == "Enemy")
-      {
-        if(checkCollision(position, obj.position, size, obj.size) ) earth.health -= 10;
-      }
+      if(obj.tab == "Enemy" && checkCollision(position, obj.position, size, obj.size) ) obj.health -= 10;
     }
   }
   
@@ -65,7 +64,6 @@ class Bullets extends GameObjects
     //magnitude
     keyPressed(dist); //magitude of vector = distance between points
     mouse.setMag(mouseMag);
-    println(dist);
     
     return mouse;
   }

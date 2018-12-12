@@ -15,6 +15,6 @@ void addParticles() //Can i put this under the mover class?
 {
    if (mousePressed && (mouseButton == RIGHT) && bulletCount < 20 )
   {
-     bullets.add( new Bullets(earth.position.x, earth.position.y) );
+     gameObjects.add( new Bullets(earth.position.x, earth.position.y) );
   }
 }

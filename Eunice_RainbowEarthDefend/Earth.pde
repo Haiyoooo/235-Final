@@ -1,7 +1,5 @@
 class Earth extends GameObjects
 {
-  float health;
-  
   Earth()
   {
     tab = "Earth";
@@ -16,10 +14,16 @@ class Earth extends GameObjects
   
   void render()
   {
+    noFill();
+    stroke(2);
+    ellipse(position.x, position.y, size, size);
     fill(50, 50);
     ellipse(position.x, position.y, health, health);
-    ellipse(position.x, position.y, size, size);
+  } 
+  
+  boolean isDead()
+  {
+    if(health>0) return false;
+    return true;
   }
-  
-  
 }

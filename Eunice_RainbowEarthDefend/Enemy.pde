@@ -1,6 +1,5 @@
 class Enemy extends GameObjects
 {
-  float health;
   float orbitSpeed;
   float angle;
   float approachSpeed;
@@ -11,9 +10,9 @@ class Enemy extends GameObjects
     tab = "Enemy";
     health = 100;
     size = 50;
-    angle = 0; //start position on the circumference
+    angle = random(0, PI); //start position on the circumference
     
-    position = new PVector(250, 0);
+    position = new PVector(0,0);
     
     distToEarth = 250;
     orbitSpeed = 0.01;
@@ -35,6 +34,14 @@ class Enemy extends GameObjects
   {   
     fill(10, 80, 100);
     ellipse(position.x, position.y, size, size);
+    fill(0);
+    text(health, position.x, position.y);
+  }
+    
+  boolean isDead()
+  {
+    if(health<1) return true;
+    return false;
   }
 }
 
@@ -52,4 +59,5 @@ class SpecialEnemy extends Enemy
     //moves across the top of the screen
     position.add(orbitSpeed,0);
   }
+
 }

@@ -21,6 +21,10 @@ void setup()
   
   gameObjects.add(earth = new Earth());
   gameObjects.add(new Enemy());
+    gameObjects.add(new Enemy());
+      gameObjects.add(new Enemy());
+        gameObjects.add(new Enemy());
+        
   gameObjects.add(new SpecialEnemy());
 }
 
@@ -44,7 +48,6 @@ void draw()
 
 void gameStart()
 {
-  
   if(mousePressed)gamestate++;
 }
 
@@ -56,10 +59,12 @@ void gameRunning()
     GameObjects obj = gameObjects.get(i);
     obj.update();
     obj.render();
+    
+    if(obj.isDead()) gameObjects.remove(i);
   }
 }
 
 void gameOver()
 {
-  if(mousePressed)gamestate++;
+  if(mousePressed)gamestate--;
 }
