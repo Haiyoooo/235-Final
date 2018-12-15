@@ -34,7 +34,7 @@ class Enemy extends GameObjects
     //attack earth, deal damage
     if(checkCollision(position, earth.position, size, earth.size) ) 
     {
-      earth.health -= 10;
+      earth.health -= 1;
       health = 0;
     }
   }
@@ -42,15 +42,16 @@ class Enemy extends GameObjects
   void render()
   {   
     noStroke();
-    fill(100, 80, 100);
-    ellipse(position.x, position.y, size, size);
+    image(enemy1img, position.x, position.y, size, size);
   }
     
   boolean isDead()
   {
     if(health<1)
     {
+      ding.play(60);
       score += 100;
+      for(int i = 0; i < 10; i++) gameObjects.add(new Particles(position.x, position.y, 100) );
       return true;
     }
     return false;
@@ -63,23 +64,30 @@ class SpecialEnemy extends Enemy
   {
     super(tempOrbit);
     position = new PVector(0, height/2);
-    size = 25;
+    size = 50;
     orbitSpeed = tempOrbit;
     health = 1;
   }
   
   void update()
   {
-    //moves across the top of the screen
+    //moves across screen
     position.add(orbitSpeed,0);
   }
   
+  void render()
+  {   
+    noStroke();
+    image(enemy2img, position.x, position.y, size, size);
+  }
       
   boolean isDead()
   {
     if(health<1)
     {
-      score += 1000;
+      ding.play(60);
+      score += 5000;
+      for(int i = 0; i < 10; i++) gameObjects.add(new Particles(position.x, position.y, 90) );
       return true;
     }
     return false;

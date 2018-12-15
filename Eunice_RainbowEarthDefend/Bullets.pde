@@ -10,17 +10,13 @@ class Bullets extends GameObjects
   float mouseMag;
 
 
-  
   Bullets(float tempX, float tempY)
   {
     position = new PVector(tempX, tempY);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     lifespan = 500;
-    r = random(10,50);
-    
-    borderActive = false;
-    border = 100;
+    r = 30;
   }
 
   void update()
@@ -33,7 +29,7 @@ class Bullets extends GameObjects
     velocity.limit(2);
     
     dealDamage();
-    if(borderActive) bounceWall();
+
   }
   
   void render()
@@ -74,24 +70,10 @@ class Bullets extends GameObjects
   {   
     switch(key)
     {
-      case 's':
-        //Stop
-        mouseMag = 0; 
-        return mouseMag;
-      case 'a':
-        //Attraction
-        mouseMag = 1;
-        return mouseMag;
-      case 'd':
-        //Disperse
+      case '2': //fast
         mouseMag = -2;
         return mouseMag;
-      case 'g':
-        //Gravitational pull
-        mouseMag = 200/(relativeDistance * relativeDistance);
-        return mouseMag;
-      case 'f':
-        //Flow away
+      case '1': //slower
         mouseMag = 200/(relativeDistance * relativeDistance) * -1;
         return mouseMag;
       default:
@@ -117,11 +99,5 @@ class Bullets extends GameObjects
       return true;
     }
     else return false;
-  }
-  
-  void bounceWall()
-  {
-    if(position.x > width - border || position.x < 0 + border) velocity.x = velocity.x * -1;
-    if(position.y > height - border  || position.y < 0 + border) velocity.y = velocity.y * -1;
   }
 }
