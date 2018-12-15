@@ -89,11 +89,12 @@ void draw()
   }
 }
 
+//*---------------- GAME START *--------------///
 void gameStart()
 {
   background(0);
   
-  
+  //text
   fill(100);
   textSize(40);
   text("COWARDLY BULLETS", width/2, height/2);
@@ -101,10 +102,15 @@ void gameStart()
   text("\n These bullets will run away from your mouse.", width/2, height*0.55);
   textSize(15);
   text("\nClick anywhere to start", width/2, height*0.6);
+  
+  //border
   renderWall();
+  
+  //bullet
   bullet.update();
   bullet.render();
   
+  //switch states
   if(mousePressed)
   {
     gameObjects.remove(0);
@@ -112,6 +118,7 @@ void gameStart()
   }
 }
 
+//*---------------- GAME RUNNING *--------------///
 void gameRunning()
 {
   background(0);
@@ -128,7 +135,7 @@ void gameRunning()
     bulletCount++;
   }
   
-  //out of bullets msg
+  //out of bullets text
   if(mousePressed && bulletCount == bulletMax)
   {
     fill(100);
@@ -137,12 +144,12 @@ void gameRunning()
   }
   
   //spawn enemies
-  fill(100);
   if(frameCount % 180 == 0) gameObjects.add(new Enemy(0.001));
   if(levelTimer > 3000 && frameCount % 100 == 0) gameObjects.add(new Enemy(0.001));
   if(levelTimer > 6000 && frameCount % 180 == 0) gameObjects.add(new Enemy(0.0015));
   if(levelTimer > 10000 && frameCount % 150 == 0) gameObjects.add(new Enemy(0.0025));
   
+  //spawn special enemies
   if(levelTimer == random(500, 1000)) gameObjects.add(new SpecialEnemy(1));
   if(levelTimer == random(1000, 2000)) gameObjects.add(new SpecialEnemy(1));
   if(levelTimer == random(2000, 3000)) gameObjects.add(new SpecialEnemy(3));
@@ -154,8 +161,7 @@ void gameRunning()
   {
     GameObjects obj = gameObjects.get(i);
     obj.update();
-    obj.render();
-    
+    obj.render();  
     if(obj.isDead()) gameObjects.remove(i);
   }
   
@@ -163,6 +169,7 @@ void gameRunning()
   if(earth.health == 0) gamestate++;
 }
 
+//*---------------- GAME OVER *--------------///
 void gameOver()
 {
   //text
