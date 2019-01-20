@@ -105,7 +105,7 @@ void gameStart()
   textSize(40);
   text("EARTH DEFENSE", width/2, height/2);
   textSize(20);
-  text("\nBullets run away from your mouse", width/2, height*0.55);
+  text("\nbullets MOVE AWAY from the mouse", width/2, height*0.55);
   textSize(15);
   text("\nClick anywhere to start", width/2, height*0.6);
   image(titleimg, width/2, height*0.3);
@@ -155,7 +155,7 @@ void gameRunning()
   textSize(15);
   if(tutorialTimer < 2000) text("Click anywhere to spawn bullets!", earth.position.x, earth.position.y + 200);
   if(tutorialTimer > 2000 && tutorialTimer < 5000) text("Press 1 or 2 to change bullet speed", earth.position.x, earth.position.y + 200);
-  if(mousePressed && tutorialTimer > 10) tutorialTimer = 2000; //next tutorial
+  if(mousePressed && tutorialTimer > 10 && tutorialTimer < 2000) tutorialTimer = 2000; //next tutorial
   if(keyPressed && tutorialTimer > 2000 && tutorialTimer < 5000) tutorialTimer+=1000;  //after enough keypresses, move onto next tutorial
   textAlign(LEFT);
   if(key == '1') text("Speed 1", 10, 20);
