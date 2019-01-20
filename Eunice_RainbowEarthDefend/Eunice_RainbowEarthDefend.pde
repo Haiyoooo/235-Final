@@ -19,6 +19,8 @@ Bullets bullet;
 
 PImage enemy1img; //https://es.kisspng.com/kisspng-tr43ze/
 PImage enemy2img; //https://es.kisspng.com/kisspng-tr43ze/
+PImage earthimg;
+PImage titleimg;
 
 int gamestate;
 final int START = 0;
@@ -29,6 +31,7 @@ float bulletCount;
 float bulletMax;
 float timer;
 float levelTimer;
+float tutorialTimer;
 boolean DEBUG = false;
 int score;
 
@@ -49,9 +52,8 @@ void setup()
   
   enemy1img = loadImage("enemy1.png");
   enemy2img = loadImage("enemy2.png");
-  
-  gameObjects.add(bullet = new Bullets(width/2, height/2));
-  
+  earthimg = loadImage("earth100x100.png");
+  titleimg = loadImage("title.png");
   initialize();
 }
 
@@ -59,11 +61,14 @@ void initialize()
 {
   gamestate = 0;
   levelTimer = 0;
+  tutorialTimer = 0;
   timer = 0;
   score = 0;
   bulletMax = 3;
+  bulletCount = 0;
   
-  gameObjects.add(earth = new Earth()); 
+  gameObjects.add(bullet = new Bullets(width/2, height/2));
+  gameObjects.add(earth = new Earth());
 }
 
 void draw()
@@ -83,9 +88,10 @@ void draw()
   
   if(DEBUG)
   {
-    fill(0);
+    fill(50);
     text("Bullets " + bulletCount, 20, 20);
     text(levelTimer, 100, 100);
+    text("No of game obejcts :" +  gameObjects.size(), 100, 200);
   }
 }
 
@@ -97,11 +103,12 @@ void gameStart()
   //text
   fill(100);
   textSize(40);
-  text("COWARDLY BULLETS", width/2, height/2);
+  text("EARTH DEFENSE", width/2, height/2);
   textSize(20);
-  text("\n These bullets will run away from your mouse.", width/2, height*0.55);
+  text("\nBullets run away from your mouse", width/2, height*0.55);
   textSize(15);
   text("\nClick anywhere to start", width/2, height*0.6);
+  image(titleimg, width/2, height*0.3);
   
   //border
   renderWall();
@@ -125,6 +132,7 @@ void gameRunning()
   if(!bgMusic.isPlaying()) bgMusic.play(1);
   timer++;
   levelTimer++;
+  tutorialTimer++;
   showScore();
   
   //spawn bullets
@@ -142,6 +150,29 @@ void gameRunning()
     textSize(15);
     text("Still regenerating! \n TIP: Don't let bullets leave the screen!", earth.position.x, earth.position.y);
   }
+  
+  //tutorial text
+  textSize(15);
+  if(tutorialTimer < 2000) text("Click anywhere to spawn bullets!", earth.position.x, earth.position.y + 200);
+  if(tutorialTimer > 2000 && tutorialTimer < 5000) text("Press 1 or 2 to change bullet speed", earth.position.x, earth.position.y + 200);
+  if(mousePressed && tutorialTimer > 10) tutorialTimer = 2000; //next tutorial
+  if(keyPressed && tutorialTimer > 2000 && tutorialTimer < 5000) tutorialTimer+=1000;  //after enough keypresses, move onto next tutorial
+  textAlign(LEFT);
+  if(key == '1') text("Speed 1", 10, 20);
+  if(key == '2') text("Speed 2", 10, 20);
+  
+  //avaliable bullets UI
+  text("Bullets avaliable: ", 10, 40);
+  strokeWeight(1);
+  fill(1);
+  ellipse(140, 35, 10, 10);
+  ellipse(150, 35, 10, 10);
+  ellipse(160, 35, 10, 10);
+  fill(100, 50);
+  if(bulletCount < 3) ellipse(140, 35, 10, 10);
+  if(bulletCount < 2) ellipse(150, 35, 10, 10);
+  if(bulletCount < 1) ellipse(160, 35, 10, 10);
+  
   
   //spawn enemies
   if(frameCount % 180 == 0) gameObjects.add(new Enemy(0.001));
@@ -177,11 +208,17 @@ void gameOver()
   textSize(40);
   text("GAMEOVER", width/2, height/2);
   textSize(20);
-  text("Click anywhere to restart", width/2, height*0.55);
+  text("Press R to restart", width/2, height*0.55);
   
-  if(mousePressed)
+  if(keyPressed && key == 'r')
   {
+    //destroy all objects
+    for(int i = gameObjects.size() - 1; i > -1; i--)
+    {
+      gameObjects.remove(i);
+    }
+    
+    //reset the game
     initialize();
-    gamestate--;
   }
 }

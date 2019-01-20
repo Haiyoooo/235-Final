@@ -17,13 +17,7 @@ class Earth extends GameObjects
     stroke(2);
     stroke(mouseX, 50, 100, 50);
     rectMode(CENTER);
-    fill(100, 50);
-    ellipse(position.x, position.y, size, size);
-    
-    //current bullets
-    float currentBullets = map(bulletMax - bulletCount, 0, bulletMax, 0, size);
-    fill(50, 80, 100, 80);
-    ellipse(position.x, position.y, currentBullets, currentBullets);
+    image(earthimg, position.x, position.y);
   } 
   
   boolean isDead()

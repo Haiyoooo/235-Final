@@ -60,7 +60,6 @@ class Bullets extends GameObjects
     //magnitude
     keyPressed(dist); //magitude of vector = distance between points
     mouse.setMag(mouseMag);
-    println(dist);
     
     return mouse;
   }

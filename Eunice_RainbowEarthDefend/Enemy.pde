@@ -16,7 +16,7 @@ class Enemy extends GameObjects
     
     distToEarth = random(250, 300);
     orbitSpeed = tempOrbit;
-    approachSpeed = 10;
+    approachSpeed = 20;
 
   }
   
